@@ -23,6 +23,11 @@ public sealed class AuthController(
     [ProducesResponseType<AccessTokenResponse>(StatusCodes.Status200OK)]
     public async Task<IActionResult> Login(LoginRequest request)
     {
+        if (request.Email.Contains('\0', StringComparison.Ordinal))
+        {
+            throw new ApiException(400, "invalid_input", "Email cannot contain a null character.", "email");
+        }
+        Response.Headers.CacheControl = "no-store";
         signInManager.AuthenticationScheme = IdentityConstants.BearerScheme;
         var result = await signInManager.PasswordSignInAsync(
             request.Email.Trim(), request.Password, isPersistent: false, lockoutOnFailure: true);
@@ -44,6 +49,7 @@ public sealed class AuthController(
     [ProducesResponseType<AccessTokenResponse>(StatusCodes.Status200OK)]
     public async Task<IActionResult> Refresh(RefreshRequest request)
     {
+        Response.Headers.CacheControl = "no-store";
         var ticket = bearerOptions.Get(IdentityConstants.BearerScheme)
             .RefreshTokenProtector.Unprotect(request.RefreshToken);
 

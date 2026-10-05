@@ -52,6 +52,55 @@ public sealed class IncidentValidationTests
         AssertField("severity", () => Incident.Create("Title", "Description", (Severity)(-1), UserId, Now));
     }
 
+    [Theory]
+    [InlineData("\0Incident")]
+    [InlineData("Incident\0details")]
+    [InlineData("Incident\0")]
+    public void Creation_rejects_null_characters_in_text(string input)
+    {
+        AssertField("title", () => Incident.Create(input, "Description", Severity.High, UserId, Now));
+        AssertField("description", () => Incident.Create("Title", input, Severity.High, UserId, Now));
+    }
+
+    [Theory]
+    [InlineData("\0Incident")]
+    [InlineData("Incident\0details")]
+    [InlineData("Incident\0")]
+    public void Null_characters_are_rejected_before_mutating_existing_incidents(string input)
+    {
+        var incident = NewIncident();
+        incident.SaveSummary("Previously reviewed summary.", UserId, Now);
+        var initialVersion = incident.Version;
+
+        AssertField("title", () => incident.UpdateDetails(input, "Replacement description", Severity.Low, Now.AddMinutes(1)));
+        AssertField("description", () => incident.UpdateDetails("Replacement title", input, Severity.Low, Now.AddMinutes(1)));
+        AssertField("body", () => incident.AddComment(input, UserId, Now.AddMinutes(1)));
+        AssertField("summary", () => incident.SaveSummary(input, Guid.NewGuid(), Now.AddMinutes(1)));
+
+        Assert.Equal("Title", incident.Title);
+        Assert.Equal("Description", incident.Description);
+        Assert.Equal(Severity.High, incident.Severity);
+        Assert.Equal("Previously reviewed summary.", incident.Summary);
+        Assert.Equal(UserId, incident.SummaryReviewedById);
+        Assert.Equal(Now, incident.SummaryReviewedAt);
+        Assert.Equal(initialVersion, incident.Version);
+        Assert.Equal(Now, incident.UpdatedAt);
+
+        incident.Assign(UserId, Now);
+        incident.Transition(IncidentStatus.Investigating, null, Now);
+        var investigationVersion = incident.Version;
+
+        AssertField("resolutionNote", () => incident.Transition(IncidentStatus.Resolved, input, Now.AddMinutes(1)));
+
+        Assert.Equal(IncidentStatus.Investigating, incident.Status);
+        Assert.Null(incident.ResolutionNote);
+        Assert.Null(incident.ResolvedAt);
+        Assert.Equal(investigationVersion, incident.Version);
+        Assert.Equal(Now, incident.UpdatedAt);
+        AssertField("note", () => StatusHistory.Create(incident.Id, UserId,
+            IncidentStatus.Investigating, IncidentStatus.Resolved, input, Now));
+    }
+
     [Fact]
     public void Text_limits_apply_after_trimming_and_allow_the_exact_limit()
     {

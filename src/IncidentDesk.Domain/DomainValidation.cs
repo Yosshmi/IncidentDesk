@@ -9,6 +9,11 @@ internal static class DomainValidation
             throw new DomainException("invalid_input", $"{field} must not be blank.", field);
         }
 
+        if (value.Contains('\0'))
+        {
+            throw new DomainException("invalid_input", $"{field} must not contain null characters.", field);
+        }
+
         var trimmed = value.Trim();
         if (trimmed.Length > maximumLength)
         {
