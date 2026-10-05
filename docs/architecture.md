@@ -19,7 +19,7 @@ flowchart LR
 
 `IncidentDesk.Api` owns request contracts, authentication/authorization, persistence, exception responses and provider integration. Feature folders keep related controllers and contracts together. EF Core is already a unit-of-work abstraction; the application uses its `DbContext` directly instead of wrapping it in a generic repository.
 
-The unit-test project verifies domain rules. The integration-test project hosts the real ASP.NET Core application with `WebApplicationFactory`, uses a disposable PostgreSQL 18 Testcontainer, applies committed migrations and exercises HTTP/database behavior. Its Data Protection keys are ephemeral and stay inside the test fixture. The LLM boundary is replaced in tests so tests are deterministic and never incur provider charges.
+The unit-test project verifies domain rules and the OpenAI adapter's request/response contract using an in-memory HTTP handler. The integration-test project hosts the real ASP.NET Core application with `WebApplicationFactory`, uses a disposable PostgreSQL 18 Testcontainer, applies committed migrations and exercises HTTP/database behavior. Its Data Protection keys are ephemeral and stay inside the test fixture. The LLM boundary is replaced in tests so tests are deterministic and never incur provider charges.
 
 ## Data model
 

@@ -54,6 +54,8 @@ public sealed class ApiFixture : IAsyncLifetime
                 {
                     ["ConnectionStrings:IncidentDesk"] = _postgres.GetConnectionString(),
                     ["ConnectionStrings:DefaultConnection"] = _postgres.GetConnectionString(),
+                    ["OpenAI:Enabled"] = "false",
+                    ["OpenAI:ApiKey"] = "",
                     ["Logging:LogLevel:Default"] = "Warning"
                 }));
         });

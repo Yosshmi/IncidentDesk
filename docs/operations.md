@@ -69,6 +69,8 @@ The default timeout is 30 seconds with no automatic retries. Set `OpenAI__Timeou
 
 The integration sends incident content to the configured provider. Use synthetic demo data unless the relevant organization has approved that transfer. Keep the API key in local environment configuration or the deployment's secret store. Provider availability, supported models and billing belong to the configured account. The implementation does not silently switch to another provider.
 
+Requests use the OpenAI Responses API with `store: false`, no tools, and a bounded output. Disabling stored responses is not a guarantee of zero provider retention; separate abuse-monitoring and account data controls may apply. See [OpenAI's data controls](https://developers.openai.com/api/docs/guides/your-data).
+
 ## Verification and troubleshooting
 
 ```sh

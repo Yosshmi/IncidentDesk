@@ -41,7 +41,9 @@ public static class OpenApiConfiguration
                     operation.Parameters ??= [];
                     operation.Parameters.Add(new OpenApiParameter
                     {
-                        Name = "If-Match", In = ParameterLocation.Header, Required = true,
+                        Name = "If-Match",
+                        In = ParameterLocation.Header,
+                        Required = true,
                         Description = "The quoted ETag returned by GET /api/v1/incidents/{id}.",
                         Schema = new OpenApiSchema { Type = JsonSchemaType.String }
                     });

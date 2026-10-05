@@ -100,7 +100,7 @@ Only an engineer can request `POST /api/v1/incidents/{id}/summary-draft`. It ret
 ```text
 src/IncidentDesk.Domain/             Workflow and domain rules
 src/IncidentDesk.Api/                HTTP, authentication, persistence and summaries
-tests/IncidentDesk.UnitTests/        Domain tests
+tests/IncidentDesk.UnitTests/        Domain and provider contract tests
 tests/IncidentDesk.IntegrationTests/ Real PostgreSQL and HTTP tests
 docs/                               API, architecture and operating notes
 scripts/                            Smoke test and portable Git handoff

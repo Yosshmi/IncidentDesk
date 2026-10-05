@@ -5,6 +5,7 @@ using IncidentDesk.Api.Auth;
 using IncidentDesk.Api.Common;
 using IncidentDesk.Api.Incidents;
 using IncidentDesk.Api.Persistence;
+using IncidentDesk.Api.Summaries;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -32,6 +33,12 @@ builder.Services.AddDbContext<IncidentDbContext>((services, options) =>
 });
 builder.Services.AddIncidentDeskIdentity();
 builder.Services.AddScoped<IncidentAccess>();
+builder.Services.Configure<OpenAiOptions>(builder.Configuration.GetSection("OpenAI"));
+builder.Services.AddHttpClient<IIncidentSummaryGenerator, OpenAiIncidentSummaryGenerator>(client =>
+{
+    // The adapter owns its bounded timeout so it can distinguish it from caller cancellation.
+    client.Timeout = Timeout.InfiniteTimeSpan;
+});
 var protection = builder.Services.AddDataProtection().SetApplicationName("IncidentDesk");
 var keyPath = builder.Configuration["DataProtection:KeyPath"];
 if (!string.IsNullOrWhiteSpace(keyPath))
