@@ -12,6 +12,7 @@ artifacts/
 !.env.example
 appsettings.*.local.json
 **/keys/
+.keys/
 *.zip
 *.trx
 __pycache__/

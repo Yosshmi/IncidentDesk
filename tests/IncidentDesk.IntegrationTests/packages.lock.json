@@ -2,12 +2,6 @@
   "version": 2,
   "dependencies": {
     "net10.0": {
-      "coverlet.collector": {
-        "type": "Direct",
-        "requested": "[10.1.0, )",
-        "resolved": "10.1.0",
-        "contentHash": "SlYCIHnBYxINSUpR75SiM5JEmnx11pqT+Ac/C/fUqTTA0dLPl9eYzmFXKKuxmQhL3ZdTQl4PBD3YdAxAauaKLQ=="
-      },
       "Microsoft.AspNetCore.Mvc.Testing": {
         "type": "Direct",
         "requested": "[10.0.12, )",
@@ -19,14 +13,14 @@
           "Microsoft.Extensions.Hosting": "10.0.12"
         }
       },
-      "Microsoft.NET.Test.Sdk": {
+      "Microsoft.Testing.Extensions.TrxReport": {
         "type": "Direct",
-        "requested": "[18.10.1, )",
-        "resolved": "18.10.1",
-        "contentHash": "SxCFvJE/2ltUQgCgv6+Ixagohw4sZc9hM7Wid2foaNM7paBscktoHLoRDz91fW8wbHG87Rg9Ku59/8PXumqUrA==",
+        "requested": "[2.4.1, )",
+        "resolved": "2.4.1",
+        "contentHash": "KGAvJKRqhod45ecH4L1cCKIjGrzziUcLo3L4hRlfOg/Ww2Q7MnA30qHY2rnKzGyLVWf91tc2VleGe8c33FmPaQ==",
         "dependencies": {
-          "Microsoft.CodeCoverage": "18.10.1",
-          "Microsoft.TestPlatform.TestHost": "18.10.1"
+          "Microsoft.Testing.Extensions.TrxReport.Abstractions": "2.4.1",
+          "Microsoft.Testing.Platform": "[2.4.1, 3.0.0)"
         }
       },
       "Testcontainers.PostgreSql": {
@@ -37,12 +31,6 @@
         "dependencies": {
           "Testcontainers": "4.15.0"
         }
-      },
-      "xunit.runner.visualstudio": {
-        "type": "Direct",
-        "requested": "[4.0.0, )",
-        "resolved": "4.0.0",
-        "contentHash": "kzLFyBYUnoidpGOXvpNOfIo8C92gVgVR6X8ncHwhcrDYugiOut5rrhDkr0L3cWHd7J2pKXf6LgaeXoBBDlx1ag=="
       },
       "xunit.v3": {
         "type": "Direct",
@@ -146,11 +134,6 @@
         "type": "Transitive",
         "resolved": "6.0.0",
         "contentHash": "UcSjPsst+DfAdJGVDsu346FX0ci0ah+lw3WRtn18NUwEqRt70HaOQ7lI72vy3+1LxtqI3T5GWwV39rQSrCzAeg=="
-      },
-      "Microsoft.CodeCoverage": {
-        "type": "Transitive",
-        "resolved": "18.10.1",
-        "contentHash": "tV7tCyp/t+DuwQugLkCeUN7NBFFB4fEGRPr0gkMQ2nQgAvQQjmGlZZi1dsLzbyoe/A0mbnKybmkIh8qhT9p4Zw=="
       },
       "Microsoft.EntityFrameworkCore": {
         "type": "Transitive",
@@ -525,16 +508,16 @@
       },
       "Microsoft.Testing.Extensions.TrxReport.Abstractions": {
         "type": "Transitive",
-        "resolved": "2.4.0",
-        "contentHash": "uRb+4qM42dFDg4kWJZ2kFEcwESNVCRZJjItp5vETorN3rSJGysP617LqYirOcrCYmxg+obPreHMM5JcsNDKtBw==",
+        "resolved": "2.4.1",
+        "contentHash": "tDxLLic2IfeChbyo8oeGZj/eBdFpPe3Dp80hUoIOefSCqqMHbsob+lX1TfFWV75PJCPouxj2zz0zzPHZxiM4nQ==",
         "dependencies": {
-          "Microsoft.Testing.Platform": "[2.4.0, 3.0.0)"
+          "Microsoft.Testing.Platform": "[2.4.1, 3.0.0)"
         }
       },
       "Microsoft.Testing.Platform": {
         "type": "Transitive",
-        "resolved": "2.4.0",
-        "contentHash": "dp1N3P1ujb0ztwFgqz2o/ItEvq+pm19/AiA+Xq7Zpcy7oPMcxDBZLYGtf0LlU1MveEBJuKVjZhI+LnkfcH/0jQ=="
+        "resolved": "2.4.1",
+        "contentHash": "3nW9NyhN1BnHRF994DCOOUQCqVA9pDT+gPpbuhI/xUntZnGnXO4ySovKxFlFuoT/48pnI74LK/DeKVlve1L3VQ=="
       },
       "Microsoft.Testing.Platform.MSBuild": {
         "type": "Transitive",
@@ -542,19 +525,6 @@
         "contentHash": "qr5M6h16YHMJLFDcWELFVMMpGte2BUmveBZKT5YoBV+bmuJRPu9bv/Zqke4yQuOEKRNxoAETrG5jr+/6Rnr3Hg==",
         "dependencies": {
           "Microsoft.Testing.Platform": "[2.4.0, 3.0.0)"
-        }
-      },
-      "Microsoft.TestPlatform.ObjectModel": {
-        "type": "Transitive",
-        "resolved": "18.10.1",
-        "contentHash": "o+PuLDRVp1iwiVAPBADZItXgm9Ck23XtPhE4kZtZVi0uYnMiiz1Dx9Cjh75kJ+ijfqnORL3VOTOaQVKi0f/ixg=="
-      },
-      "Microsoft.TestPlatform.TestHost": {
-        "type": "Transitive",
-        "resolved": "18.10.1",
-        "contentHash": "KYz2omqkoz9E2mWa4fdgT+Ycie1wi5968EmyJlusjlp87RxxtA2FvDm8tcBEYIDzLnkWGnsKjE4d13Z7/rxkQA==",
-        "dependencies": {
-          "Microsoft.TestPlatform.ObjectModel": "18.10.1"
         }
       },
       "Microsoft.Win32.Registry": {
