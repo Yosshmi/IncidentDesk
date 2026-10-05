@@ -1,0 +1,61 @@
+name: incidentdesk
+
+x-app: &app
+  image: incidentdesk:local
+  build:
+    context: .
+  environment: &app-environment
+    ASPNETCORE_ENVIRONMENT: Development
+    ConnectionStrings__IncidentDesk: "Host=postgres;Port=5432;Database=incidentdesk;Username=incidentdesk;Password=${POSTGRES_PASSWORD:?Copy .env.example to .env and set POSTGRES_PASSWORD}"
+    DataProtection__KeyPath: /app/keys
+    OpenAI__Enabled: "${OPENAI_ENABLED:-false}"
+    OpenAI__ApiKey: "${OPENAI_API_KEY:-}"
+    OpenAI__Model: "${OPENAI_MODEL:-gpt-4.1-mini}"
+  volumes:
+    - data-protection-keys:/app/keys
+
+services:
+  postgres:
+    image: postgres:18.6
+    environment:
+      POSTGRES_DB: incidentdesk
+      POSTGRES_USER: incidentdesk
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?Copy .env.example to .env and set POSTGRES_PASSWORD}"
+    ports:
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # PostgreSQL 18 places PGDATA beneath this version-aware parent directory.
+      - postgres-data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U incidentdesk -d incidentdesk"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  migrate:
+    <<: *app
+    command: ["--migrate", "--seed-demo"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    <<: *app
+    ports:
+      - "127.0.0.1:${API_PORT:-8080}:8080"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/health/ready"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+  data-protection-keys:
