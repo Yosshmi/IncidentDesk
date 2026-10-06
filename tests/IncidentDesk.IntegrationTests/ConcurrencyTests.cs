@@ -15,6 +15,9 @@ public sealed class ConcurrencyTests(ApiFixture fixture)
     {
         var incident = await fixture.CreateAsync();
         var path = $"/api/v1/incidents/{incident.Value.Id}";
+        using var response = await fixture.Engineer.GetAsync(path, TestContext.Current.CancellationToken);
+        Assert.True(response.Headers.CacheControl?.NoTransform);
+        Assert.False(response.Headers.ETag?.IsWeak);
         var change = new { title = "First accepted edit", description = "Updated description", severity = "High" };
         await ApiFixture.ProblemAsync(await ApiFixture.SendAsync(fixture.Engineer, HttpMethod.Put, path, change),
             428, "version_required");

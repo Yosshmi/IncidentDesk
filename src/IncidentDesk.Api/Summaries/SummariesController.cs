@@ -36,7 +36,7 @@ public sealed class SummariesController(
 
         var text = await generator.GenerateAsync(input, cancellationToken);
         Response.Headers.ETag = IncidentVersions.Format(sourceVersion);
-        Response.Headers.CacheControl = "no-store";
+        Response.Headers.CacheControl = "no-store, no-transform";
         return Ok(new SummaryDraftResponse(text, sourceVersion));
     }
 }

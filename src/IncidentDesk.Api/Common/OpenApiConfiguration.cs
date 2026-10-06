@@ -14,6 +14,7 @@ public static class OpenApiConfiguration
             {
                 document.Info.Title = "IncidentDesk";
                 document.Info.Version = "v1";
+                document.Servers = [new OpenApiServer { Url = "/" }];
                 document.Info.Description = "Incident investigation and support-ticket API. Sign in using POST /api/v1/auth/login, then supply the returned accessToken using Bearer authentication. Existing-incident writes require the quoted ETag from GET in If-Match.";
                 if (context.ApplicationServices.GetRequiredService<IConfiguration>().GetValue<bool>("Demo:Enabled"))
                 {

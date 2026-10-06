@@ -36,6 +36,7 @@ public sealed class ProductionDocsTests
         var response = await client.GetAsync("/openapi/v1.json", TestContext.Current.CancellationToken);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         using var schema = JsonDocument.Parse(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        Assert.Equal("/", schema.RootElement.GetProperty("servers")[0].GetProperty("url").GetString());
         Assert.True(schema.RootElement.GetProperty("paths").TryGetProperty("/api/v1/auth/login", out _));
         Assert.True(schema.RootElement.GetProperty("components").GetProperty("securitySchemes").TryGetProperty("Bearer", out _));
         var description = schema.RootElement.GetProperty("info").GetProperty("description").GetString()!;
