@@ -2,6 +2,8 @@
 
 Base URL: `http://localhost:8080/api/v1`. JSON property names use camel case. IDs and versions are UUIDs; dates are ISO 8601 timestamps. Enum bodies use names such as `High` and `Investigating`, not integer values. Interactive documentation is at `/docs` in Development and Testing environments.
 
+Recorded timestamps use UTC with microsecond precision, matching PostgreSQL storage. Fractions smaller than a microsecond are truncated before recording incident changes, comments and history, so timestamps returned by a write match subsequent reads.
+
 ## Authentication and permissions
 
 `POST /auth/login` accepts `{ "email": "...", "password": "..." }` and returns `tokenType`, `accessToken`, `expiresIn` and `refreshToken`. Send `Authorization: Bearer <accessToken>` thereafter. These are ASP.NET Core Identity opaque tokens, not JWTs; clients must not parse them. `POST /auth/refresh` accepts `{ "refreshToken": "..." }`. `GET /auth/me` returns the authenticated user's ID, email, display name and roles. Login and refresh share a limit of 30 requests per IP per minute; five failed sign-in attempts lock an account for 15 minutes.

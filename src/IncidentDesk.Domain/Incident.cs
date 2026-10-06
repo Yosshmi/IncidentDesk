@@ -42,8 +42,8 @@ public sealed class Incident
             Description = validDescription,
             Severity = severity,
             Status = IncidentStatus.Open,
-            CreatedAt = now.ToUniversalTime(),
-            UpdatedAt = now.ToUniversalTime(),
+            CreatedAt = RecordedTime.UtcMicroseconds(now),
+            UpdatedAt = RecordedTime.UtcMicroseconds(now),
             Version = Guid.NewGuid()
         };
     }
@@ -105,7 +105,7 @@ public sealed class Incident
         if (target == IncidentStatus.Resolved)
         {
             ResolutionNote = validResolutionNote;
-            ResolvedAt = now.ToUniversalTime();
+            ResolvedAt = RecordedTime.UtcMicroseconds(now);
         }
 
         Touch(now);
@@ -125,7 +125,7 @@ public sealed class Incident
 
         Summary = validText;
         SummaryReviewedById = reviewerId;
-        SummaryReviewedAt = now.ToUniversalTime();
+        SummaryReviewedAt = RecordedTime.UtcMicroseconds(now);
         Touch(now);
     }
 
@@ -139,7 +139,7 @@ public sealed class Incident
 
     private void Touch(DateTimeOffset now)
     {
-        UpdatedAt = now.ToUniversalTime();
+        UpdatedAt = RecordedTime.UtcMicroseconds(now);
         Version = Guid.NewGuid();
     }
 }

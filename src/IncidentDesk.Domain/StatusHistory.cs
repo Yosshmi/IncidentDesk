@@ -32,7 +32,7 @@ public sealed class StatusHistory
         FromStatus = fromStatus;
         ToStatus = toStatus;
         Note = validNote;
-        CreatedAt = createdAt.ToUniversalTime();
+        CreatedAt = RecordedTime.UtcMicroseconds(createdAt);
     }
 
     public Guid Id { get; private set; }

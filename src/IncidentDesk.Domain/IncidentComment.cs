@@ -17,7 +17,7 @@ public sealed class IncidentComment
         IncidentId = incidentId;
         AuthorId = authorId;
         Body = validBody;
-        CreatedAt = createdAt.ToUniversalTime();
+        CreatedAt = RecordedTime.UtcMicroseconds(createdAt);
     }
 
     public Guid Id { get; private set; }
