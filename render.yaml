@@ -1,0 +1,27 @@
+services:
+  - type: web
+    name: incidentdesk
+    runtime: docker
+    plan: free
+    region: singapore
+    repo: https://github.com/Yosshmi/IncidentDesk
+    branch: main
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health/ready
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: INCIDENTDESK_BOOTSTRAP_DEMO
+        value: "true"
+      - key: Demo__Enabled
+        value: "true"
+      - key: Docs__Enabled
+        value: "true"
+      - key: DataProtection__PersistToDatabase
+        value: "true"
+      - key: OpenAI__Enabled
+        value: "false"
+      - key: ConnectionStrings__IncidentDesk
+        sync: false

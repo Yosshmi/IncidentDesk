@@ -9,6 +9,9 @@ ASP.NET Core accepts nested configuration keys as environment variables using do
 | `ConnectionStrings__IncidentDesk` | `POSTGRES_PASSWORD` plus local fixed database/user | PostgreSQL connection string |
 | `ASPNETCORE_ENVIRONMENT` | Set to Development by supplied Compose | Local demo environment |
 | `DataProtection__KeyPath` | Set to `/app/keys` by supplied Compose | Persist authentication-protection keys |
+| `DataProtection__PersistToDatabase` | Not set by local Compose | Persist authentication-protection keys in PostgreSQL; takes precedence over KeyPath |
+| `Demo__Enabled` | Not set by local Compose | Explicitly allow fictional seed data outside Development |
+| `Docs__Enabled` | Not set by local Compose | Explicitly publish interactive docs outside Development/Testing |
 | `OpenAI__Enabled` | `OPENAI_ENABLED`, default `false` | Enable draft generation |
 | `OpenAI__ApiKey` | `OPENAI_API_KEY`, default empty | Provider credential |
 | `OpenAI__Model` | `OPENAI_MODEL`, default `gpt-4.1-mini` | Draft-generation model |
@@ -33,7 +36,7 @@ export ASPNETCORE_ENVIRONMENT=Development
 dotnet run --project src/IncidentDesk.Api -- --migrate --seed-demo
 ```
 
-Configure the database connection before either command. The seeder is idempotent, so re-running the local bootstrap does not create duplicate demo accounts. The API does not silently seed on normal startup. Do not enable the demo seeder in a deployed environment.
+Configure the database connection before either command. The seeder is idempotent, so re-running the bootstrap does not create duplicate demo accounts. The API does not silently seed on normal startup. A shared public portfolio demo can explicitly opt into seeding with `Demo__Enabled=true`; use a database dedicated to fictional data. See [Render and Neon deployment](deployment.md).
 
 When changing the EF model, create and inspect a new migration, then test it against an empty database and the previous schema:
 

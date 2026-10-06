@@ -43,7 +43,15 @@ The development accounts all use **`IncidentDesk1!`**:
 | `engineer1@example.test` | Engineer |
 | `engineer2@example.test` | Engineer |
 
-These accounts are created only by the explicit development seed command. The supplied Compose stack is a local demonstration configuration; do not expose it publicly with these accounts or development settings.
+These accounts are created only by the explicit seed command. The supplied Compose stack is a local demonstration configuration. Public hosting uses Production mode and the explicit demo settings described below.
+
+## Public demo on Render and Neon
+
+The repository includes a [Render Free Blueprint](render.yaml) for this API and uses an external Neon Free PostgreSQL database. See [deployment and verification instructions](docs/deployment.md).
+
+In the public demo, `/` redirects to the interactive Scalar docs at `/docs`. The docs list the fictional accounts and explain how to sign in and supply the access token. `/openapi/v1.json` exposes the API schema. Visitors can exercise the incident workflow with fictional data.
+
+Production documentation and demo seeding are explicit opt-ins. The Render configuration enables both, applies committed migrations before serving requests, and persists token-protection keys in PostgreSQL so authentication survives container replacement. Free hosting can take a minute to wake after inactivity. The shared demo is intended for portfolio review; enter only fictional information.
 
 ```sh
 docker compose logs --follow api
@@ -118,4 +126,4 @@ The zip includes committed source and a sanitized `.git` directory, preserves re
 
 ## Deliberate limits
 
-This is a single-service portfolio implementation, not a deployed incident-response platform. It has no React dashboard, Azure resources, public registration, account-administration UI, notifications, attachments, incident reopening, private notes, SLA engine or multi-tenant model. Local Identity tokens are suitable for the demo; enterprise deployment should use a managed identity provider, TLS, appropriate key protection, database backups and an operational review. No real employer incident data is included.
+This is a single-service portfolio implementation with a deployment configuration for a shared public API demo. It has no React dashboard, Azure resources, public registration, account-administration UI, notifications, attachments, incident reopening, private notes, SLA engine or multi-tenant model. Identity tokens are suitable for the demo; enterprise deployment should use a managed identity provider, TLS, appropriate key protection, database backups and an operational review. No real employer incident data is included.
