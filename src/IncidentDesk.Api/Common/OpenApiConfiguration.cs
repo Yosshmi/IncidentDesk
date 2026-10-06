@@ -15,7 +15,7 @@ public static class OpenApiConfiguration
                 document.Info.Title = "IncidentDesk";
                 document.Info.Version = "v1";
                 document.Servers = [new OpenApiServer { Url = "/" }];
-                document.Info.Description = "Incident investigation and support-ticket API. Sign in using POST /api/v1/auth/login, then supply the returned accessToken using Bearer authentication. Existing-incident writes require the quoted ETag from GET in If-Match.";
+                document.Info.Description = "Incident investigation and support-ticket API. Sign in using POST /api/v1/auth/login, then supply the returned accessToken using Bearer authentication. Existing-incident writes require the quoted X-Incident-ETag from GET in If-Match. This preserves the original version when hosting proxies rewrite the standard ETag header.";
                 if (context.ApplicationServices.GetRequiredService<IConfiguration>().GetValue<bool>("Demo:Enabled"))
                 {
                     document.Info.Description += $"\n\n## Public fictional demo\nThis shared sandbox contains fictional data. Use only fictional input; other visitors can view or modify shared demo incidents.\n\n" +
@@ -55,7 +55,7 @@ public static class OpenApiConfiguration
                         Name = "If-Match",
                         In = ParameterLocation.Header,
                         Required = true,
-                        Description = "The quoted ETag returned by GET /api/v1/incidents/{id}.",
+                        Description = "The quoted X-Incident-ETag returned by GET /api/v1/incidents/{id}; a strong ETag can also be used.",
                         Schema = new OpenApiSchema { Type = JsonSchemaType.String }
                     });
                 }

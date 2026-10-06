@@ -163,11 +163,7 @@ public sealed class IncidentsController(
         return incident;
     }
 
-    private void SetVersion(Incident incident)
-    {
-        Response.Headers.ETag = IncidentVersions.Format(incident.Version);
-        Response.Headers.CacheControl = "no-store, no-transform";
-    }
+    private void SetVersion(Incident incident) => IncidentVersions.WriteHeaders(Response, incident.Version);
 
     private ActionResult<IncidentResponse> IncidentResult(Incident incident)
     {

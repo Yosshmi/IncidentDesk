@@ -4,6 +4,14 @@ public static class IncidentVersions
 {
     public static string Format(Guid version) => $"\"{version:D}\"";
 
+    public static void WriteHeaders(HttpResponse response, Guid version)
+    {
+        var value = Format(version);
+        response.Headers.ETag = value;
+        response.Headers["X-Incident-ETag"] = value;
+        response.Headers.CacheControl = "no-store, no-transform";
+    }
+
     public static void RequireMatch(HttpRequest request, Guid currentVersion)
     {
         if (!request.Headers.TryGetValue("If-Match", out var values))

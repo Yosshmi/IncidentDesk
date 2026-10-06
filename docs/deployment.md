@@ -60,3 +60,5 @@ Use the verified `/docs` URL as the resume's **Live API Demo** link. This projec
 Redeployment reruns migrations and the idempotent seed, preserving existing users and incidents. It does not reset the demo or replace account passwords. Data Protection keys remain in the database across restarts. Deleting those keys invalidates previously issued tokens; deleting the database removes all demo data.
 
 Use a separate database and account configuration for any real incident-management deployment. Disable public demo settings and configure appropriate access, key encryption and backups before using real data.
+
+The interactive docs use the current HTTPS origin. For incident writes, copy the quoted `X-Incident-ETag` response header into `If-Match`. This preserves the original resource version if the hosting CDN weakens the standard `ETag`.

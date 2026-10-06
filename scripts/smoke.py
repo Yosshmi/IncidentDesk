@@ -86,7 +86,7 @@ def main():
 
     def current():
         body, response_headers = request("GET", path, token=engineer)
-        value = response_headers.get("ETag")
+        value = response_headers.get("X-Incident-ETag") or response_headers.get("ETag")
         assert value and not value.startswith("W/"), "Expected a strong ETag."
         return body, value
 
