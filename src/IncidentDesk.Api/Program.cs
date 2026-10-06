@@ -16,9 +16,9 @@ var migrate = args.Contains("--migrate", StringComparer.Ordinal);
 var seedDemo = args.Contains("--seed-demo", StringComparer.Ordinal);
 var hostArgs = args.Where(arg => arg is not "--migrate" and not "--seed-demo").ToArray();
 var builder = WebApplication.CreateBuilder(hostArgs);
-if (seedDemo && (!migrate || !builder.Environment.IsDevelopment()))
+if (seedDemo && (!migrate || (!builder.Environment.IsDevelopment() && !builder.Configuration.GetValue<bool>("Demo:Enabled"))))
 {
-    throw new InvalidOperationException("--seed-demo requires --migrate and the Development environment.");
+    throw new InvalidOperationException("--seed-demo requires --migrate and either Development or explicit Demo:Enabled configuration.");
 }
 
 builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 65_536);
@@ -41,7 +41,11 @@ builder.Services.AddHttpClient<IIncidentSummaryGenerator, OpenAiIncidentSummaryG
 });
 var protection = builder.Services.AddDataProtection().SetApplicationName("IncidentDesk");
 var keyPath = builder.Configuration["DataProtection:KeyPath"];
-if (!string.IsNullOrWhiteSpace(keyPath))
+if (builder.Configuration.GetValue<bool>("DataProtection:PersistToDatabase"))
+{
+    protection.PersistKeysToDbContext<IncidentDbContext>();
+}
+else if (!string.IsNullOrWhiteSpace(keyPath))
 {
     Directory.CreateDirectory(keyPath);
     protection.PersistKeysToFileSystem(new DirectoryInfo(keyPath));
@@ -138,8 +142,9 @@ app.MapGet("/health/ready", async (IncidentDbContext db, CancellationToken cance
     }
     return Results.Json(new { status = "Unhealthy" }, statusCode: 503);
 });
-if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing"))
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Testing") || app.Configuration.GetValue<bool>("Docs:Enabled"))
 {
+    app.MapGet("/", () => Results.Redirect("/docs")).ExcludeFromDescription();
     app.MapOpenApi();
     app.MapScalarApiReference("/docs", options => options.WithTitle("IncidentDesk API"));
 }

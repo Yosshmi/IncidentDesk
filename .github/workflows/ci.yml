@@ -52,6 +52,29 @@ jobs:
         run: docker compose up --build --detach --wait --wait-timeout 180
       - name: Smoke test the Docker application
         run: python3 scripts/smoke.py
+      - name: Verify container startup orchestration
+        run: python3 -m unittest discover -s tests -p 'test_*.py'
+      - name: Smoke test the production demo configuration
+        env:
+          POSTGRES_PASSWORD: ci-only-incidentdesk-database
+        run: |
+          cat > "$RUNNER_TEMP/incidentdesk-production.yaml" <<'YAML'
+          services:
+            migrate:
+              environment:
+                ASPNETCORE_ENVIRONMENT: Production
+                Demo__Enabled: "true"
+                DataProtection__PersistToDatabase: "true"
+            api:
+              environment:
+                ASPNETCORE_ENVIRONMENT: Production
+                Demo__Enabled: "true"
+                Docs__Enabled: "true"
+                INCIDENTDESK_BOOTSTRAP_DEMO: "true"
+                DataProtection__PersistToDatabase: "true"
+          YAML
+          docker compose -f compose.yaml -f "$RUNNER_TEMP/incidentdesk-production.yaml" up --detach --force-recreate --wait --wait-timeout 180
+          python3 scripts/smoke.py
       - name: Show container logs on failure
         if: failure()
         env:

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace IncidentDesk.Api.Persistence;
 
-/// <summary>Explicit development setup; never called by ordinary API startup.</summary>
+/// <summary>Explicit fictional demo setup; never called by ordinary API startup.</summary>
 public static class DemoSeeder
 {
     public const string Password = "IncidentDesk1!";

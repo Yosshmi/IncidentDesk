@@ -15,7 +15,8 @@ RUN apt-get update \
     && mkdir -p /app/keys \
     && chown app:app /app/keys
 COPY --from=build /out .
+COPY --chmod=755 scripts/docker-entrypoint.sh /app/docker-entrypoint.sh
 ENV ASPNETCORE_HTTP_PORTS=8080
 USER $APP_UID
 EXPOSE 8080
-ENTRYPOINT ["dotnet", "IncidentDesk.Api.dll"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]

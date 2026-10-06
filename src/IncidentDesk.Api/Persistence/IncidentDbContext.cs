@@ -1,5 +1,6 @@
 using IncidentDesk.Api.Auth;
 using IncidentDesk.Domain;
+using Microsoft.AspNetCore.DataProtection.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -7,8 +8,9 @@ using Microsoft.EntityFrameworkCore;
 namespace IncidentDesk.Api.Persistence;
 
 public sealed class IncidentDbContext(DbContextOptions<IncidentDbContext> options)
-    : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>(options)
+    : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>(options), IDataProtectionKeyContext
 {
+    public DbSet<DataProtectionKey> DataProtectionKeys => Set<DataProtectionKey>();
     public DbSet<Incident> Incidents => Set<Incident>();
     public DbSet<IncidentComment> Comments => Set<IncidentComment>();
     public DbSet<StatusHistory> StatusHistory => Set<StatusHistory>();
