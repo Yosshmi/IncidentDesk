@@ -27,7 +27,10 @@ public sealed class ProductionDocsTests
         var root = await client.GetAsync("/", TestContext.Current.CancellationToken);
         Assert.Equal(HttpStatusCode.Redirect, root.StatusCode);
         Assert.Equal("/docs", root.Headers.Location?.ToString());
-        var docs = await client.GetAsync("/docs", TestContext.Current.CancellationToken);
+        var docsRedirect = await client.GetAsync("/docs", TestContext.Current.CancellationToken);
+        Assert.Equal(HttpStatusCode.Redirect, docsRedirect.StatusCode);
+        Assert.NotNull(docsRedirect.Headers.Location);
+        var docs = await client.GetAsync(docsRedirect.Headers.Location, TestContext.Current.CancellationToken);
         Assert.Equal(HttpStatusCode.OK, docs.StatusCode);
         Assert.Equal("text/html", docs.Content.Headers.ContentType?.MediaType);
         var response = await client.GetAsync("/openapi/v1.json", TestContext.Current.CancellationToken);

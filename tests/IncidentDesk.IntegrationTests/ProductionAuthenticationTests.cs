@@ -19,8 +19,12 @@ public sealed class ProductionAuthenticationTests(ApiFixture fixture)
         await using var scope = fixture.Factory.Services.CreateAsyncScope();
         var connection = scope.ServiceProvider.GetRequiredService<IncidentDbContext>().Database.GetConnectionString()!;
         var directory = Path.Combine(Path.GetTempPath(), $"incidentdesk-keys-{Guid.NewGuid():N}");
+        var previousDatabaseMode = Environment.GetEnvironmentVariable("DataProtection__PersistToDatabase");
+        var previousKeyPath = Environment.GetEnvironmentVariable("DataProtection__KeyPath");
         try
         {
+            Environment.SetEnvironmentVariable("DataProtection__PersistToDatabase", "true");
+            Environment.SetEnvironmentVariable("DataProtection__KeyPath", Path.Combine(directory, "first"));
             TokenResponse tokens;
             await using (var first = CreateFactory(connection, Path.Combine(directory, "first")))
             {
@@ -29,6 +33,7 @@ public sealed class ProductionAuthenticationTests(ApiFixture fixture)
                     new { email = "engineer1@example.test", password = DemoSeeder.Password }, TestContext.Current.CancellationToken), HttpStatusCode.OK);
             }
 
+            Environment.SetEnvironmentVariable("DataProtection__KeyPath", Path.Combine(directory, "replacement"));
             await using var replacement = CreateFactory(connection, Path.Combine(directory, "replacement"));
             using var authenticated = replacement.CreateClient();
             authenticated.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", tokens.AccessToken);
@@ -40,6 +45,8 @@ public sealed class ProductionAuthenticationTests(ApiFixture fixture)
         }
         finally
         {
+            Environment.SetEnvironmentVariable("DataProtection__PersistToDatabase", previousDatabaseMode);
+            Environment.SetEnvironmentVariable("DataProtection__KeyPath", previousKeyPath);
             if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true);
         }
     }
